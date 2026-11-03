@@ -1,0 +1,10 @@
+{
+  "name": "Remix Remix Remix Health Point - Diagnostic Sample Logistics ERP",
+  "description": "Enterprise Diagnostic Laboratory Sample Logistics Management ERP connecting collection centres, collectors, GPS tracking, barcode scanning, and central lab receiving.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

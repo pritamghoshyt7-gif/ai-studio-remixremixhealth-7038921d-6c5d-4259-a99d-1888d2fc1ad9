@@ -1,0 +1,110 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "pritamghoshyt7@gmail.com" ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['Super Admin', 'Admin'])
+      );
+    }
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Collection Centres
+    match /collectionCentres/{centreId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Patients
+    match /patients/{patientId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Samples
+    match /samples/{sampleId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Collectors
+    match /collectors/{collectorId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // GPS Devices
+    match /gpsDevices/{deviceId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Logistics Trips & Dispatches
+    match /logisticsTrips/{tripId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Lab Receipts
+    match /labReceipts/{receiptId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Billing Records
+    match /billingRecords/{billId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Audit Logs
+    match /auditLogs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    // System Settings
+    match /systemSettings/{settingId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Connection testing
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

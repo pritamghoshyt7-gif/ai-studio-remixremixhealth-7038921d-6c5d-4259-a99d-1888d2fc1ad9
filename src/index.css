@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+}
+
+/* Thermal Sticker Printer Media Queries */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #thermal-sticker-label,
+  #thermal-sticker-label * {
+    visibility: visible;
+  }
+  #thermal-sticker-label {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 2in !important;
+    height: 1in !important;
+    margin: 0 !important;
+    padding: 2px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
